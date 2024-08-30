@@ -1,83 +1,52 @@
-const sizeX = 18;
-const sizeY = 1;
-const gap = 25;
-let amount = 12;
-const fields = 6;
-let grid = [];
-const s = 100 / fields;
-const centerX = (width - sizeX) / 2;
-const centerY = (height - sizeY) / 2;
-const sX = sizeX / fields;
-const sY = sizeY / fields;
+//// Code comments were added with the assistance of ChatGPT, an AI language model by OpenAI.
+
+const size = 18; // Size of each element (a square) in both width and height
+const gap = 25; // Gap between elements when placing them on the canvas
+const fields = 6; // Number of small squares in each element (6x6 grid)
 
 function setup() {
-  createCanvas(innerWidth, innerHeight);
-  //noCursor();
-  // Initialize the grid with false (not clicked)
-  for (let i = 0; i < amount; i++) {
-    grid[i] = [];
-    for (let j = 0; j < amount; j++) {
-      grid[i][j] = false; // Initially, no square is clicked
-    }
-  }
+  createCanvas(innerWidth, innerHeight); // Sets up the canvas to fit the browser window size
+  noLoop(); // Stops the draw() function from looping automatically
 }
 
-function drawElement(counter) {
-  push();
+function drawElement() {
+  const s = size / fields; // Size of each small square inside the element
 
   for (let x = 0; x < fields; x++) {
+    // Loop over columns in the grid
     for (let y = 0; y < fields; y++) {
-      push();
-      noStroke();
-      if (Math.random() < 0.5) {
-        fill(random(255), random(255), random(255));
-      }
-
-      square(x * sX, y * sY, s);
-      pop();
+      // Loop over rows in the grid
+      fill(random(255), random(255), random(255)); // Set a random color for the square
+      square(x * s, y * s, s); // Draw the small square at the calculated position and size
     }
   }
-  pop();
 }
 
 function draw() {
-  background(0, 0, 0);
+  background(0); // Set the background to black
 
-  noFill();
-  stroke(0, 0, 0);
-  strokeWeight(1);
+  const centerX = (width - size) / 2; // Calculate the X position to center the elements horizontally
+  const centerY = (height - size) / 2; // Calculate the Y position to center the elements vertically
+  const amount = 12; // Number of elements to draw in a grid
 
+  // Loop to position and draw each element on the canvas
   for (let x = -Math.floor(amount / 2); x < Math.ceil(amount / 2); x++) {
+    // Loop over columns of elements
     for (let y = -Math.floor(amount / 2); y < Math.ceil(amount / 2); y++) {
-      let xPosition = centerX + x * (sizeX + gap);
-      let yPosition = centerY + y * (sizeY + gap);
-      if (amount % 2 === 0) {
-        xPosition += sizeX / 2;
-      }
-      push();
-      translate(xPosition, yPosition);
-
-      drawElement(0);
-      pop();
+      // Loop over rows of elements
+      const xPosition = centerX + x * (size + gap); // Calculate X position for the current element
+      const yPosition = centerY + y * (size + gap); // Calculate Y position for the current element
+      push(); // Save the current drawing state (to isolate transformations)
+      translate(xPosition, yPosition); // Move the drawing origin to the element's position
+      drawElement(); // Draw the 6x6 grid element at the translated position
+      pop(); // Restore the original drawing state (before translation)
     }
   }
-
-  noLoop();
 }
 
 function keyPressed() {
   if (key === "m") {
-    loop();
-    redraw();
-    //amount = random(15);
-    noLoop();
+    // Check if the "m" key is pressed
+    redraw(); // Redraw the canvas when the "m" key is pressed
   }
-}
-
-function mousePressed() {
-  push();
-  noStroke();
-  //fill(0, 0, 0);
-  //rect(mouseX - 15, mouseY - 10, 33, 20);
-  pop();
 }
