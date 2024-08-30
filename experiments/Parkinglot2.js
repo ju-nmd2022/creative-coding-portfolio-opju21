@@ -1,11 +1,9 @@
 const sizeX = 18;
 const sizeY = 1;
-const gap = 25;
-let amount = 1;
+const gap = 30;
+const amount = 10;
 const fields = 6;
-const s = sizeX + sizeY / fields;
-const centerX = (width - sizeX) / 2;
-const centerY = (height - sizeY) / 2;
+const size = 10;
 
 function setup() {
   createCanvas(innerWidth, innerHeight);
@@ -14,18 +12,19 @@ function setup() {
 
 function drawElement(counter) {
   push();
-
+  const s = size + 8 / fields;
   const sX = sizeX / fields;
   const sY = sizeY / fields;
-
   for (let x = 0; x < fields; x++) {
     for (let y = 0; y < fields; y++) {
       push();
       noStroke();
+      rotate(1);
       if (Math.random() < 0.5) {
         fill(random(255), random(255), random(255));
       }
       square(x * sX, y * sY, s);
+
       pop();
     }
   }
@@ -34,42 +33,24 @@ function drawElement(counter) {
 
 function draw() {
   background(0, 0, 0);
-  console.log(width);
+  console.log(mouseX, mouseY);
   noFill();
   stroke(0, 0, 0);
   strokeWeight(1);
 
+  const centerX = (width - sizeX) / 2;
+  const centerY = (height - sizeY) / 2;
   for (let x = -Math.floor(amount / 2); x < Math.ceil(amount / 2); x++) {
     for (let y = -Math.floor(amount / 2); y < Math.ceil(amount / 2); y++) {
       let xPosition = centerX + x * (sizeX + gap);
       let yPosition = centerY + y * (sizeY + gap);
-      if (amount % 2 === 0) {
-        xPosition += sizeX / 2;
-      }
+
       push();
       translate(xPosition, yPosition);
+      drawElement();
 
-      drawElement(0);
       pop();
     }
-  }
-
-  noLoop();
-}
-
-function keyPressed() {
-  if (key === " ") {
-    loop();
-    redraw();
-    amount = random(15);
     noLoop();
   }
-}
-
-function mousePressed() {
-  push();
-  noStroke();
-  fill(0, 0, 0);
-  rect(mouseX - 15, mouseY - 10, 33, 20);
-  pop();
 }
