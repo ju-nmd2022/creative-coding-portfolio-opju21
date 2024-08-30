@@ -58,7 +58,7 @@ function draw() {
 }
 
 function keyPressed() {
-  if (key === " ") {
+  if (key === "m") {
     loop();
     redraw();
     amount = random(15);
