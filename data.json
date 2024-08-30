@@ -6,12 +6,12 @@
   },
   {
     "file": "experiments/Parkinglot1.js",
-    "name": "Name of your experiment",
+    "name": "Parkinglot, with perfect parking",
     "description": "Explains the what and the why. What is the main idea? What is the purpose? What is the inspiration?"
   },
   {
     "file": "experiments/Parkinglot2.js",
-    "name": "Name of your experiment",
+    "name": "The parking squares are tilted, fancy",
     "description": "Explains the what and the why. What is the main idea? What is the purpose? What is the inspiration?"
   }
 ]
