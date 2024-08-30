@@ -1,16 +1,16 @@
 [
   {
-    "file": "experiments/Experement1.js",
+    "file": "experiments/Parkinglot1.js",
     "name": "Name of your experiment",
     "description": "Explains the what and the why. What is the main idea? What is the purpose? What is the inspiration?"
   },
   {
-    "file": "experiments/Parkinglot1.js",
+    "file": "experiments/Parkinglot2.js",
     "name": "Parkinglot, with perfect parking",
     "description": "Explains the what and the why. What is the main idea? What is the purpose? What is the inspiration?"
   },
   {
-    "file": "experiments/Parkinglot2.js",
+    "file": "experiments/Experement1.js",
     "name": "The parking squares are tilted, fancy",
     "description": "Explains the what and the why. What is the main idea? What is the purpose? What is the inspiration?"
   }
