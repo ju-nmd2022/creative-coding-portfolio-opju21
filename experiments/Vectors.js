@@ -54,6 +54,8 @@ class Agent {
     push(); // Save the current drawing state
     noStroke();
     fill(random(255), random(255), random(255));
+    ellipse(this.lastPosition.x + 5, this.lastPosition.y, 10);
+    ellipse(this.lastPosition.x + 10, this.lastPosition.y + 5, 10);
     square(this.lastPosition.x, this.lastPosition.y, 10);
 
     // Draw a line from the last position to the current position (this creates the trail effect)
@@ -90,7 +92,7 @@ function generateAgents() {
     let agent = new Agent(
       innerWidth - 100,
       Math.random() * innerHeight,
-      6, // Maximum speed of the agent
+      4, // Maximum speed of the agent
       0.6 // Maximum force the agent can apply to change direction
     );
     agents.push(agent); // Add the new agent to the list of agents

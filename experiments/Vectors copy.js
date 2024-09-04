@@ -54,9 +54,11 @@ class Agent {
     push(); // Save the current drawing state
     const col = get(this.position.x, this.position.y); // Get the color of the current pixel
     this.behaveBasedOnColor(col); // Change the agent's behavior based on the pixel color
-
-    fill(random(255), random(255), random(255)); // Set a random color for the square
     noStroke(); // Remove the outline of the square
+    fill(random(255), random(255), random(255)); // Set a random color for the square
+
+    ellipse(this.position.x + 2, this.position.y, 4);
+    ellipse(this.position.x + 4, this.position.y + 2, 4);
     square(this.lastPosition.x, this.lastPosition.y, 4); // Draw a square at the last position to leave a permanent mark
     pop(); // Restore the original drawing state
   }

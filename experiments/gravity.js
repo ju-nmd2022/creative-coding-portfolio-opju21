@@ -24,6 +24,12 @@ class Element {
   draw() {
     noStroke();
     fill(this.color);
+    ellipse(this.position.x + this.size / 2, this.position.y, this.size);
+    ellipse(
+      this.position.x + this.size,
+      this.position.y + this.size / 2,
+      this.size
+    );
     square(this.position.x, this.position.y, this.size); // Draw the element as a circle at its current position
   }
 }
