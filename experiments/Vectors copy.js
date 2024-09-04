@@ -87,6 +87,7 @@ class Agent {
 
 function setup() {
   createCanvas(innerWidth, innerHeight); // Create a canvas that fills the browser window
+  background(0, 0, 0);
   field = generateField(); // Generate the vector field that agents will follow
   generateAgents(); // Generate the agents that will move around the canvas
 }
@@ -107,11 +108,11 @@ function generateField() {
 }
 
 function generateAgents() {
-  for (let i = 0; i < 50; i++) {
+  for (let i = 0; i < 200; i++) {
     // Create 50 agents
     let agent = new Agent(
-      random(innerWidth),
-      random(innerHeight),
+      Math.random() * innerWidth,
+      Math.random() * innerHeight,
       10, // Maximum speed of the agent
       0.5 // Maximum force the agent can apply to change direction
     );
