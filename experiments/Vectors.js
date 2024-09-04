@@ -54,7 +54,7 @@ class Agent {
     push(); // Save the current drawing state
     noStroke();
     fill(random(255), random(255), random(255));
-    square(this.lastPosition.x, this.lastPosition.y, 4);
+    square(this.lastPosition.x, this.lastPosition.y, 10);
 
     // Draw a line from the last position to the current position (this creates the trail effect)
     pop(); // Restore the original drawing state
@@ -85,10 +85,10 @@ function generateField() {
 }
 
 function generateAgents() {
-  for (let i = 0; i < 1000; i++) {
+  for (let i = 0; i < 5; i++) {
     // Create 200 agents
     let agent = new Agent(
-      Math.random() * innerWidth,
+      innerWidth - 100,
       Math.random() * innerHeight,
       6, // Maximum speed of the agent
       0.6 // Maximum force the agent can apply to change direction

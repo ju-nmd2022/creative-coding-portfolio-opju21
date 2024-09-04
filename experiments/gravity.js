@@ -1,10 +1,12 @@
+// add more planets with color
 class Element {
-  constructor(x, y) {
+  constructor(x, y, color) {
     this.position = createVector(x, y); // Set the initial position of the element as a vector
     this.velocity = createVector(4, 4); // Set the initial velocity of the element (moving downwards)
     this.acceleration = createVector(0, 0); // Set the initial acceleration of the element to zero
     this.size = 80; // Set the size of the element (for drawing it as a circle)
     this.mass = 8; // Set the mass of the element (affects how it reacts to forces)
+    this.color = color; // Set the color of the element
   }
 
   applyForce(force) {
@@ -21,8 +23,8 @@ class Element {
 
   draw() {
     noStroke();
-    fill(20, 255, 255); // Set the fill color to black
-    ellipse(this.position.x, this.position.y, this.size); // Draw the element as a circle at its current position
+    fill(this.color);
+    square(this.position.x, this.position.y, this.size); // Draw the element as a circle at its current position
   }
 }
 
@@ -44,27 +46,38 @@ class Attractor {
 
   draw() {
     fill(0, 0, 0); // Set the fill color to black
-    ellipse(this.position.x, this.position.y, this.size); // Draw the attractor as a circle at its position
+    //ellipse(innerWidth / 2, innerHeight / 2, this.size); // Draw the attractor as a circle at its position
   }
 }
 
-let element; // Declare a variable to hold the element
+let elements = []; // Declare a variable to hold the element
 let attractor; // Declare a variable to hold the attractor
 let G = 1; // Set the gravitational constant (controls the strength of the attraction)
 
 function setup() {
   createCanvas(innerWidth, innerHeight); // Create a canvas that fills the browser window
-  element = new Element(100, 100); // Initialize the element at position (100, 100)
-  attractor = new Attractor(400, 300); // Initialize the attractor at position (400, 300)
+  for (let i = 0; i < 100; i++) {
+    elements.push(
+      new Element(i, 100, color(random(255), random(255), random(255)))
+    ); // Red element
+    elements.push(
+      new Element(i, 200, color(random(255), random(255), random(255)))
+    ); // Green element
+    elements.push(
+      new Element(i, 300, color(random(255), random(255), random(255)))
+    ); // Blue element
+  }
+
+  attractor = new Attractor(innerWidth / 2, innerHeight / 2); // Initialize the attractor at position (400, 300)
 }
 
 function draw() {
-  background(255, 255, 255); // Set the background color to white
-
-  let force = attractor.attract(element); // Calculate the gravitational force exerted by the attractor on the element
-  element.applyForce(force); // Apply the calculated force to the element
-  element.update(); // Update the element's position and velocity based on the applied forces
-  element.draw(); // Draw the element on the canvas
-
+  background(0, 0, 0); // Set the background color to white
+  for (let element of elements) {
+    let force = attractor.attract(element); // Calculate the gravitational force exerted by the attractor on the element
+    element.applyForce(force); // Apply the calculated force to the element
+    element.update(); // Update the element's position and velocity based on the applied forces
+    element.draw(); // Draw the element on the canvas
+  }
   attractor.draw(); // Draw the attractor on the canvas
 }

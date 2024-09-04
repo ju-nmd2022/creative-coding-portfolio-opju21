@@ -34,16 +34,16 @@ class Agent {
   checkBorders() {
     // Check if the agent has moved off the screen on the left or right
     if (this.position.x < 0) {
-      this.position.x = innerWidth; // Wrap the agent to the right side of the screen
-      this.lastPosition.x = innerWidth; // Update last position for smooth trail
+      this.position.x = innerWidth - 10; // Wrap the agent to the right side of the screen
+      this.lastPosition.x = innerWidth - 10; // Update last position for smooth trail
     } else if (this.position.x > innerWidth) {
       this.position.x = 0; // Wrap the agent to the left side of the screen
       this.lastPosition.x = 0; // Update last position for smooth trail
     }
     // Check if the agent has moved off the screen on the top or bottom
     if (this.position.y < 0) {
-      this.position.y = innerHeight; // Wrap the agent to the bottom of the screen
-      this.lastPosition.y = innerHeight; // Update last position for smooth trail
+      this.position.y = innerHeight - 10; // Wrap the agent to the bottom of the screen
+      this.lastPosition.y = innerHeight - 10; // Update last position for smooth trail
     } else if (this.position.y > innerHeight) {
       this.position.y = 0; // Wrap the agent to the top of the screen
       this.lastPosition.y = 0; // Update last position for smooth trail
@@ -67,20 +67,14 @@ class Agent {
     let b = blue(col);
 
     // Change behavior based on the pixel color
-    if (r > 200) {
-      // Red pixel
-      this.maxSpeed = 50; // Speed up
-    } else if (g > 200) {
-      // Green pixel
-      this.maxSpeed = 2; // Slow down
-    } else if (b > 200) {
-      // Blue pixel
+    if (r > 110) {
+      this.maxSpeed = 10; // Speed up
+    } else if (g > 110) {
+      this.maxSpeed = 5; // Slow down
+    } else if (b > 110) {
       this.velocity.rotate(random(-PI / 2, PI / 2)); // Change direction randomly
-    } else if (r < 50 && g < 50 && b < 50) {
-      // Black pixel
-      this.velocity.mult(0); // Stop the agent
     } else {
-      this.maxSpeed = 25; // Default speed
+      this.maxSpeed = 8; // Default speed
     }
   }
 }
@@ -108,11 +102,11 @@ function generateField() {
 }
 
 function generateAgents() {
-  for (let i = 0; i < 200; i++) {
+  for (let i = 0; i < 10; i++) {
     // Create 50 agents
     let agent = new Agent(
-      Math.random() * innerWidth,
-      Math.random() * innerHeight,
+      innerWidth / 2,
+      100,
       10, // Maximum speed of the agent
       0.5 // Maximum force the agent can apply to change direction
     );

@@ -1,8 +1,8 @@
 //// Code comments were added with the assistance of ChatGPT, an AI language model by OpenAI.
 
 const size = 18; // Size of each element (a square) in both width and height
-const gap = 5; // Gap between elements when placing them on the canvas
-const fields = 3; // Number of small squares in each element (6x6 grid)
+const gap = 25; // Gap between elements when placing them on the canvas
+const fields = 6; // Number of small squares in each element (6x6 grid)
 
 function setup() {
   createCanvas(innerWidth, innerHeight); // Sets up the canvas to fit the browser window size
@@ -16,7 +16,9 @@ function drawElement() {
     // Loop over columns in the grid
     for (let y = 0; y < fields; y++) {
       // Loop over rows in the grid
+      noStroke();
       fill(random(255), random(255), random(255)); // Set a random color for the square
+      rotate(random(5));
       square(x * s, y * s, s); // Draw the small square at the calculated position and size
     }
   }
