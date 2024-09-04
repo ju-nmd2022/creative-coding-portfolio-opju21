@@ -52,17 +52,10 @@ class Agent {
 
   draw() {
     push(); // Save the current drawing state
-    stroke(255, 255, 255, 10); // Set stroke color with slight transparency (to create fading trails)
-    strokeWeight(random(4)); // Set the stroke weight (line thickness)
+    noStroke();
     fill(random(255), random(255), random(255));
     square(this.lastPosition.x, this.lastPosition.y, 4);
 
-    line(
-      this.lastPosition.x,
-      this.lastPosition.y,
-      this.position.x,
-      this.position.y
-    );
     // Draw a line from the last position to the current position (this creates the trail effect)
     pop(); // Restore the original drawing state
   }
@@ -97,7 +90,7 @@ function generateAgents() {
       innerWidth,
       random(innerHeight - 10),
       6, // Maximum speed of the agent
-      0.5 // Maximum force the agent can apply to change direction
+      0.6 // Maximum force the agent can apply to change direction
     );
     agents.push(agent); // Add the new agent to the list of agents
   }
