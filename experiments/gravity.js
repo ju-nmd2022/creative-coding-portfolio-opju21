@@ -62,6 +62,7 @@ let G = 1; // Set the gravitational constant (controls the strength of the attra
 
 function setup() {
   createCanvas(innerWidth, innerHeight); // Create a canvas that fills the browser window
+
   for (let i = 0; i < 100; i++) {
     elements.push(
       new Element(i, 100, color(random(255), random(255), random(255)))
