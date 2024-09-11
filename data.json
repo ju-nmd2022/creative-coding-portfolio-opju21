@@ -33,5 +33,15 @@
     "file": "experiments/Vectors copy.js",
     "name": "Infastructure",
     "description": "Explains the what and the why. What is the main idea? What is the purpose? What is the inspiration?"
+  },
+  {
+    "file": "experiments/Pixels.js",
+    "name": "Heart confetti",
+    "description": "Click on screen"
+  },
+  {
+    "file": "experiments/PixelHearts.js",
+    "name": "Heart confetti",
+    "description": "Click on screen"
   }
 ]
