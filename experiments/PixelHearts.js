@@ -1,91 +1,104 @@
 // Code snippet, with edits from me, from Patt Vira (27 mars 2024) p5.js Coding Tutorial | 💖 Exploding Hearts 💖 (Particle Systems). https://www.youtube.com/watch?v=YgDY7l2W9eE
-
-let hearts = [];
-let currentColor;
+// Comments added with ChatGPT
+let hearts = []; // Array to hold the heart objects
+let currentColor; // Variable to hold the current random color
 
 function setup() {
-  createCanvas(innerWidth, innerHeight);
-  angleMode(DEGREES); // Use degrees for angles
-  currentColor = getRandomColor();
+  createCanvas(innerWidth, innerHeight); // Create canvas that takes up the full window width and height
+  angleMode(DEGREES); // Use degrees instead of radians for angles
+  currentColor = getRandomColor(); // Assign a random color to currentColor when the sketch starts
 }
 
 function draw() {
-  background(0);
+  background(0); // Set the background to black
 
-  // Loop through and display each heart
+  // Loop through the hearts array in reverse to update and display hearts
   for (let i = hearts.length - 1; i > 0; i--) {
-    hearts[i].updateHeart();
-    hearts[i].displayHeart();
+    hearts[i].updateHeart(); // Update the heart's state
+    hearts[i].displayHeart(); // Display the heart on the canvas
+
+    // If a heart is "done" (all particles have fallen off screen), remove it from the array
     if (hearts[i].done == true) {
-      hearts.splice(i, 1);
+      hearts.splice(i, 1); // Remove the heart from the array
     }
   }
-  print(hearts.length);
+  print(hearts.length); // Print the number of hearts currently on screen to the console
 }
 
 // Function to generate a random color
 function getRandomColor() {
   return {
-    red: random(255),
-    green: random(255),
-    blue: random(255),
+    red: random(255), // Generate a random red value
+    green: random(255), // Generate a random green value
+    blue: random(255), // Generate a random blue value
   };
 }
 
 // Add new heart on mouse press
 function mousePressed() {
-  // Create and push a new Heart with random parameters
+  // Create and push a new heart at the mouse location into the hearts array
   hearts.push(new Heart(mouseX, mouseY));
 }
 
 class Heart {
   constructor(x, y) {
-    this.x = x;
-    this.y = y;
-    this.num = floor(random(30, 50)); // Random number of points
-    this.r = random(50, 100); // Random size
-    this.dr = 4;
-    this.limit = random(100, 140);
-    this.fall = false;
-    this.done = false;
-    this.color = getRandomColor(); // Assign each heart a random color
-    this.shape = [];
+    this.x = x; // X position of the heart
+    this.y = y; // Y position of the heart
+    this.num = floor(random(30, 50)); // Random number of particles (points) in the heart
+
+    this.r = random(50, 100); // Random size of the heart
+    this.dr = 4; // Rate at which the heart grows
+    this.limit = random(100, 140); // Maximum size before the heart starts falling apart
+    this.fall = false; // Whether the particles are falling or not
+    this.done = false; // Whether the heart is done (all particles have fallen off screen)
+    this.color = getRandomColor(); // Assign a random color to each heart
+    this.shape = []; // Array to store the particles (points) that make up the heart
 
     // Create particles based on heart equation
     for (let i = 0; i < this.num; i++) {
-      let angle = (360 / this.num) * i;
-      let pos = this.heartEqn(angle, this.r);
-      this.shape[i] = new Particle(pos.x, pos.y); // Pass x and y to Particle
+      let angle = (360 / this.num) * i; // Calculate the angle for each particle
+      let pos = this.heartEqn(angle, this.r); // Calculate the position based on heart equation
+      this.shape[i] = new Particle(pos.x, pos.y); // Create a new particle at the calculated position
     }
   }
-  updateHeart() {
-    for (let i = 0; i < this.num; i++) {
-      let angle = (360 / this.num) * i;
 
-      //this.shape[i].updateParticle();
+  updateHeart() {
+    // Loop through each particle and update its position
+    for (let i = 0; i < this.num; i++) {
+      let angle = (360 / this.num) * i; // Calculate angle for each particle
+
+      // If the heart isn't falling, update particle position based on heart equation
       if (this.fall == false) {
         this.shape[i].position = this.heartEqn(angle, this.r);
       } else {
-        this.shape[i].updateParticle();
+        this.shape[i].updateParticle(); // If falling, update particle's position based on velocity
       }
     }
+
+    // Increase the heart's radius until it reaches its limit, then make particles fall
     if (this.r < this.limit) {
-      this.r += this.dr;
+      this.r += this.dr; // Increase the radius
     } else {
-      this.fall = true;
+      this.fall = true; // Start making the heart fall
     }
   }
+
   displayHeart() {
     push(); // Save the current drawing state
-    fill(this.color.red, this.color.green, this.color.blue); // Use the heart's own color
+    fill(this.color.red, this.color.green, this.color.blue); // Set the fill color for the heart
     translate(this.x, this.y); // Move to the heart's position
-    let sum = 0;
+    let sum = 0; // Counter for particles off the screen
+
     // Display each particle
     for (let i = 0; i < this.num; i++) {
-      this.shape[i].displayParticle();
+      this.shape[i].displayParticle(); // Display the particle
+
+      // Check if the particle is off the screen
       if (this.shape[i].offScreen() == true) {
-        sum += 1;
+        sum += 1; // Increase counter if off screen
       }
+
+      // If all particles are off screen, mark the heart as done
       if (sum == this.num) {
         this.done = true;
       }
@@ -93,35 +106,46 @@ class Heart {
     pop(); // Restore the original drawing state
   }
 
+  // Heart equation to calculate particle positions based on angle and radius
   heartEqn(angle, r) {
-    let x = sqrt(2) * pow(sin(angle), 3) * r; // Calculate x using sin
-    let y = (pow(-cos(angle), 3) - pow(cos(angle), 2) + 2 * cos(angle)) * -r; // Correct cos and formula for y
-    return createVector(x, y);
+    let x = sqrt(2) * pow(sin(angle), 3) * r; // Calculate x coordinate using a heart equation
+    let y = (pow(-cos(angle), 3) - pow(cos(angle), 2) + 2 * cos(angle)) * -r; // Calculate y coordinate using a heart equation
+    return createVector(x, y); // Return position as a vector
   }
 }
 
 class Particle {
   constructor(x, y) {
-    this.position = createVector(x, y); // Store the position as a vector
-    //this.velocity = createVector(1, 1);
-    this.velocity = p5.Vector.random2D();
-    this.acceleration = createVector(0, 1);
+    this.position = createVector(x, y); // Store the initial position of the particle
+    this.velocity = p5.Vector.random2D(); // Randomize velocity direction for the particle
+    this.acceleration = createVector(0, 1); // Apply constant downward acceleration (gravity)
+    this.rotation = random(0, 360); // Initial random rotation angle
+    this.rotationSpeed = random(1, 5); // Random speed for the particle's rotation
   }
+
   updateParticle() {
-    this.velocity.add(this.acceleration);
-    this.position.add(this.velocity);
+    this.velocity.add(this.acceleration); // Apply acceleration to the velocity (gravity effect)
+    this.position.add(this.velocity); // Update the particle's position based on velocity
+    this.rotation += this.rotationSpeed; // Increase the particle's rotation angle
   }
+
   displayParticle() {
-    noStroke();
-    ellipse(this.position.x + 5, this.position.y, 10, 10);
-    ellipse(this.position.x + 10, this.position.y + 5, 10, 10);
-    square(this.position.x, this.position.y, 10);
+    push(); // Save the current drawing state
+    translate(this.position.x, this.position.y); // Move to the particle's position
+    rotate(this.rotation); // Rotate the particle
+    noStroke(); // Remove stroke (border)
+    ellipse(5, 0, 10, 10); // Draw an ellipse at rotated position
+    ellipse(10, 5, 10, 10); // Draw a second ellipse
+    square(0, 0, 10); // Draw a square at rotated position
+    pop(); // Restore the original drawing state
   }
+
   offScreen() {
+    // Check if the particle is off the bottom of the screen
     if (this.position.y > height) {
-      return true;
+      return true; // Return true if off screen
     } else {
-      return false;
+      return false; // Return false if still on screen
     }
   }
 }
