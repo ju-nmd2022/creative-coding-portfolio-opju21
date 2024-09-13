@@ -4,7 +4,7 @@ class Particle {
     this.position = createVector(x, y); // Initialize particle's position as a vector at (x, y)
 
     const a = Math.random() * Math.PI * 5; // Generate a random angle for velocity direction
-    const v = 0.2 + Math.random(); // Generate a random velocity magnitude between 0.2 and 1.2
+    const v = 0.6 + Math.random(); // Generate a random velocity magnitude between 0.2 and 1.2
     this.velocity = createVector(Math.cos(a) * v, Math.sin(a) * v); // Set the velocity vector based on the angle and magnitude
     this.rotation = random(0, 360);
     this.rotationSpeed = random(0.1, 0.1);

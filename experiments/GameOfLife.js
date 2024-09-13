@@ -1,5 +1,5 @@
 function setup() {
-  createCanvas(800, 800);
+  createCanvas(innerWidth, innerHeight);
 }
 
 class Cell {
@@ -12,16 +12,19 @@ class Cell {
 
   draw(size) {
     if (this.state == 0) {
-      fill(255, 255, 255);
-    } else {
       fill(0, 0, 0);
+    } else {
+      fill(random(255), random(255), random(255));
+      ellipse(this.x * size + size / 2, this.y * size - size, size);
+      ellipse(this.x * size + size / 2, this.y * size, size);
     }
-    rect(this.x * size, this.y * size, size, size);
+
+    rect(this.x * size, this.y * size, size);
   }
 }
 
 let board = [];
-let size = 4;
+let size = 10;
 let lifecycle = 2;
 let count = 0;
 let boardsize = 200;

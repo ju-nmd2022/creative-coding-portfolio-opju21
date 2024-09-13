@@ -43,5 +43,10 @@
     "file": "experiments/PixelHearts.js",
     "name": "Heart confetti",
     "description": "Click on screen"
+  },
+  {
+    "file": "experiments/GameOfLife.js",
+    "name": "The girls are out on the town, PARTY!",
+    "description": "Its getting late, some are leaving"
   }
 ]
