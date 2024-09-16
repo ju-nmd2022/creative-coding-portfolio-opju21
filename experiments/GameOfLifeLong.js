@@ -12,7 +12,7 @@ class Cell {
 
   draw(size) {
     if (this.state == 0) {
-      fill(0, 0, 0);
+      //fill(0, 0, 0);
     } else {
       fill(random(255), random(255), random(255));
       ellipse(this.x * size + size / 2, this.y * size - size, size);
