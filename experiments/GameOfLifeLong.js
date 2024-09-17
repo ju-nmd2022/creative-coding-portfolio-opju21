@@ -1,25 +1,46 @@
 function setup() {
   createCanvas(innerWidth, innerHeight);
 }
-
 class Cell {
   constructor(x, y, state) {
     this.x = x;
     this.y = y;
     this.state = state;
     this.newState = -1;
+    this.color = null; // Store color for each cell
   }
 
   draw(size) {
     if (this.state == 0) {
-      //fill(0, 0, 0);
+      //fill(0, 0, 0); // Dead cells remain black
     } else {
-      fill(random(255), random(255), random(255));
-      ellipse(this.x * size + size / 2, this.y * size - size, size);
+      if (this.color === null) {
+        // Assign a random color when the cell becomes alive for the first time
+        this.color = color(random(255), random(255), random(255));
+      }
+      fill(this.color);
+      //ellipse(this.x * size + size / 2, this.y * size - size, size);
       ellipse(this.x * size + size / 2, this.y * size, size);
     }
 
-    rect(this.x * size, this.y * size, size);
+    rect(this.x * size, this.y * size, size); // Draw the grid cell
+  }
+
+  behaveBasedOnColor(col) {
+    let r = red(col);
+    let g = green(col);
+    let b = blue(col);
+
+    // Change behavior based on the pixel color
+    if (r > 110) {
+      this.state = 1; // Cell becomes alive
+    } else if (g > 110) {
+      // No color-related behavior for green
+    } else if (b > 110) {
+      this.state = 3; // Special state (not defined in this example)
+    } else {
+      // No change
+    }
   }
 }
 
