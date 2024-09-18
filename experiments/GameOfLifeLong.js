@@ -6,6 +6,7 @@ function setup() {
   synth = new Tone.Synth().toDestination(); // Initialize the synthesizer
   Tone.start(); // Start Tone.js audio context
   initializeBoard(); // Initialize the board for the first time
+  noLoop(); // Prevent the draw function from looping automatically
 }
 
 class Cell {
@@ -62,10 +63,8 @@ class Cell {
 }
 
 let board = []; // 2D array to represent the grid of cells
-let size = 15; // Size of each cell in the grid
-let lifecycle = 5; // Number of frames between state updates
-let count = 0; // Counter to keep track of frames
-let boardsize = 50;
+let size = 20; // Size of each cell in the grid
+let boardsize = 40;
 
 // Initialize the board with cells
 function initializeBoard() {
@@ -115,26 +114,20 @@ function calculateLiving() {
 }
 
 function draw() {
-  if (count == 0) {
-    noStroke(); // Disable stroke for shapes
-    for (let i = 0; i < board.length; i++) {
-      for (let j = 0; j < board[i].length; j++) {
-        board[i][j].draw(size); // Draw each cell
-        calculateNewState(i, j); // Calculate the new state for the next generation
-      }
-    }
-    calculateLiving(); // Calculate the number of living cells
-
-    // Update the state of the board to the new state
-    for (let i = 0; i < board.length; i++) {
-      for (let j = 0; j < board[i].length; j++) {
-        board[i][j].state = board[i][j].newState;
-      }
+  noStroke(); // Disable stroke for shapes
+  for (let i = 0; i < board.length; i++) {
+    for (let j = 0; j < board[i].length; j++) {
+      board[i][j].draw(size); // Draw each cell
+      calculateNewState(i, j); // Calculate the new state for the next generation
     }
   }
-  count++; // Increment the frame counter
-  if (count == lifecycle) {
-    count = 0; // Reset the frame counter after completing one lifecycle
+  calculateLiving(); // Calculate the number of living cells
+
+  // Update the state of the board to the new state
+  for (let i = 0; i < board.length; i++) {
+    for (let j = 0; j < board[i].length; j++) {
+      board[i][j].state = board[i][j].newState;
+    }
   }
 }
 
@@ -145,4 +138,13 @@ function mousePressed() {
   }
   initializeBoard(); // Reinitialize the board on click
   redraw(); // Force a redraw after the board is reinitialized
+}
+
+// Allow draw to run again when triggered manually
+function mousePressed() {
+  if (Tone.context.state !== "running") {
+    Tone.context.resume(); // Ensure Tone.js is started when the mouse is pressed (needed in some browsers)
+  }
+  initializeBoard(); // Reinitialize the board on click
+  loop(); // Restart the draw loop to run continuously
 }
