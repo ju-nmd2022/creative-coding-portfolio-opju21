@@ -1,12 +1,11 @@
-import * as Tone from "tone";
 let synth;
 
 function setup() {
   fill(0, 0, 0);
-  createCanvas(innerWidth, innerHeight); // Creates a canvas that fills the browser window
-
-  synth = new Tone.Synth().toDestination(); // Initializes a new synthesizer and connects it to the destination (output speakers)
-  Tone.start(); // Ensures that Tone.js is initialized and ready to produce sound
+  createCanvas(500, 500);
+  synth = new Tone.Synth().toDestination(); // Initialize the synthesizer
+  Tone.start(); // Start Tone.js audio context
+  initializeBoard(); // Initialize the board for the first time
 }
 
 class Cell {
@@ -16,7 +15,7 @@ class Cell {
     this.state = state; // The current state of the cell (0 = dead, 1 = alive)
     this.newState = -1; // Placeholder for the new state in the next generation
     this.color = null; // The color of the cell (will be assigned later if alive)
-    this.hasMadeNoise = false; // Boolean flag to ensure the sound is triggered only once when the cell turns blue
+    this.hasMadeNoise = false; // Ensure the noise is triggered only once when the color is active
   }
 
   draw(size) {
@@ -29,9 +28,10 @@ class Cell {
         this.color = color(random(255), random(255), random(255));
       }
       fill(this.color); // Use the assigned color to fill the cell
+      ellipse(this.x * size + size / 2, this.y * size - size, size);
       ellipse(this.x * size + size / 2, this.y * size, size); // Draw the cell as an ellipse in the grid
 
-      // Check the color and trigger sound if it's predominantly blue
+      // Check the color and trigger sound based on color components
       this.behaveBasedOnColor(this.color);
     }
 
@@ -39,29 +39,44 @@ class Cell {
   }
 
   behaveBasedOnColor(col) {
-    let b = blue(col); // Get the blue component of the cell's color
+    let r = red(col); // Get the red component of the cell's color
+    let g = green(col); // Get the green component
+    let b = blue(col); // Get the blue component
 
-    // If the blue component is greater than 110 and the cell hasn't made noise yet, trigger sound
-    if (b > 110 && !this.hasMadeNoise) {
-      synth.triggerAttackRelease("C4", "2n"); // Play a C4 note for an eighth note duration
-      this.hasMadeNoise = true; // Mark that the cell has made noise so it won't repeat
+    // Map the color to a sound, trigger sound only once when the color is active
+    if (!this.hasMadeNoise) {
+      let note;
+      if (r > g && r > b) {
+        note = "C4"; // Red-dominant color plays C4
+      } else if (g > r && g > b) {
+        note = "E4"; // Green-dominant color plays E4
+      } else if (b > r && b > g) {
+        note = "G4"; // Blue-dominant color plays G4
+      }
+
+      // Trigger the note and mark that sound has been made for this cell
+      synth.triggerAttackRelease(note, "8n");
+      this.hasMadeNoise = true;
     }
   }
 }
 
 let board = []; // 2D array to represent the grid of cells
-let size = 10; // Size of each cell in the grid
+let size = 15; // Size of each cell in the grid
 let lifecycle = 5; // Number of frames between state updates
 let count = 0; // Counter to keep track of frames
-let boardsize = 200; // Number of cells in each dimension of the grid (200x200)
+let boardsize = 50;
 
 // Initialize the board with cells
-for (let i = 0; i < boardsize; i++) {
-  board.push([]); // Add a new row to the board
-  for (let j = 0; j < boardsize; j++) {
-    let state = Math.round(Math.random() % 1); // Randomly assign state (0 or 1) to each cell
-    let cell = new Cell(i, j, state); // Create a new Cell object
-    board[i].push(cell); // Add the cell to the board
+function initializeBoard() {
+  board = []; // Reset the board
+  for (let i = 0; i < boardsize; i++) {
+    board.push([]); // Add a new row to the board
+    for (let j = 0; j < boardsize; j++) {
+      let state = Math.round(Math.random()); // Randomly assign state (0 or 1) to each cell
+      let cell = new Cell(i, j, state); // Create a new Cell object
+      board[i].push(cell); // Add the cell to the board
+    }
   }
 }
 
@@ -123,9 +138,11 @@ function draw() {
   }
 }
 
-// Add a mousePressed function to trigger Tone.js correctly
+// Add a mousePressed function to trigger Tone.js and reinitialize the board
 function mousePressed() {
   if (Tone.context.state !== "running") {
     Tone.context.resume(); // Ensure Tone.js is started when the mouse is pressed (needed in some browsers)
   }
+  initializeBoard(); // Reinitialize the board on click
+  redraw(); // Force a redraw after the board is reinitialized
 }

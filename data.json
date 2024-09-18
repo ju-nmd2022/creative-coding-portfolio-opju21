@@ -51,6 +51,11 @@
   },
   {
     "file": "experiments/GameOfLifeLong.js",
+    "name": "Chatting about important things",
+    "description": "Click"
+  },
+  {
+    "file": "experiments/Tone.js",
     "name": "The girls are out on the town, PARTY!",
     "description": "Its getting late, some are leaving"
   }
