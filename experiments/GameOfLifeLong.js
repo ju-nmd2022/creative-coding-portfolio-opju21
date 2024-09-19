@@ -1,12 +1,13 @@
 let synth;
 
 function setup() {
-  fill(0, 0, 0);
-  createCanvas(500, 500);
+  createCanvas(innerWidth, innerHeight);
+  background(0);
   synth = new Tone.Synth().toDestination(); // Initialize the synthesizer
   Tone.start(); // Start Tone.js audio context
   initializeBoard(); // Initialize the board for the first time
   noLoop(); // Prevent the draw function from looping automatically
+  frameRate(3); // Set the frame rate to 5 frames per second
 }
 
 class Cell {
@@ -29,6 +30,7 @@ class Cell {
         this.color = color(random(255), random(255), random(255));
       }
       fill(this.color); // Use the assigned color to fill the cell
+
       ellipse(this.x * size + size / 2, this.y * size - size, size);
       ellipse(this.x * size + size / 2, this.y * size, size); // Draw the cell as an ellipse in the grid
 
@@ -114,6 +116,9 @@ function calculateLiving() {
 }
 
 function draw() {
+  const centerX = (width - size) / 2; // Calculate the X position to center the elements horizontally
+  const xPosition = centerX + this.x; // Calculate X position for the current element
+  translate(xPosition, 0);
   noStroke(); // Disable stroke for shapes
   for (let i = 0; i < board.length; i++) {
     for (let j = 0; j < board[i].length; j++) {

@@ -23,6 +23,7 @@ class Particle {
     translate(this.position.x, this.position.y); // Move the drawing context to the particle's position
     rotate(this.rotation);
     noStroke(); // Disable stroke (outline) for the shapes
+
     // Set a random fill color for the particle
     fill(random(255), random(255), random(255));
     // Draw two ellipses and a square at the particle's position to form its shape
