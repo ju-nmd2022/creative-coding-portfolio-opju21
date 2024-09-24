@@ -52,6 +52,7 @@ class Attractor {
 
   draw() {
     fill(0, 0, 0); // Set the fill color to black
+
     //ellipse(innerWidth / 2, innerHeight / 2, this.size); // Draw the attractor as a circle at its position
   }
 }

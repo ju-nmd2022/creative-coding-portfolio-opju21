@@ -51,16 +51,14 @@ class Agent {
   }
 
   draw() {
-    push(); // Save the current drawing state
+    let size = 8;
     const col = get(this.position.x, this.position.y); // Get the color of the current pixel
     this.behaveBasedOnColor(col); // Change the agent's behavior based on the pixel color
     noStroke(); // Remove the outline of the square
     fill(random(255), random(255), random(255)); // Set a random color for the square
-
-    ellipse(this.position.x + 2, this.position.y, 4);
-    ellipse(this.position.x + 4, this.position.y + 2, 4);
-    square(this.lastPosition.x, this.lastPosition.y, 4); // Draw a square at the last position to leave a permanent mark
-    pop(); // Restore the original drawing state
+    ellipse(this.lastPosition.x + 5, this.lastPosition.y, 10);
+    ellipse(this.lastPosition.x + 10, this.lastPosition.y + 5, 10);
+    square(this.lastPosition.x, this.lastPosition.y, 10);
   }
 
   behaveBasedOnColor(col) {
@@ -70,13 +68,13 @@ class Agent {
 
     // Change behavior based on the pixel color
     if (r > 110) {
-      this.maxSpeed = 10; // Speed up
+      this.maxSpeed = 5; // Speed up
     } else if (g > 110) {
-      this.maxSpeed = 5; // Slow down
+      this.maxSpeed = 2.5; // Slow down
     } else if (b > 110) {
       this.velocity.rotate(random(-PI / 2, PI / 2)); // Change direction randomly
     } else {
-      this.maxSpeed = 8; // Default speed
+      this.maxSpeed = 4; // Default speed
     }
   }
 }
@@ -119,7 +117,7 @@ function generateAgents() {
 const fieldSize = 10; // Size of each cell in the vector field
 const maxCols = Math.ceil(innerWidth / fieldSize); // Calculate the number of columns in the field based on the canvas width
 const maxRows = Math.ceil(innerHeight / fieldSize); // Calculate the number of rows in the field based on the canvas height
-const divider = 4; // Divider to control the scaling of the noise function (affects the smoothness of the vector field)
+const divider = 10; // Divider to control the scaling of the noise function (affects the smoothness of the vector field)
 let field; // Declare a variable to hold the vector field
 let agents = []; // Initialize an empty array to hold the agents
 

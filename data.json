@@ -58,5 +58,10 @@
     "file": "experiments/GameOfLifeLong.js",
     "name": "The girls are out on the town, PARTY!",
     "description": "Its getting late, some are leaving"
+  },
+  {
+    "file": "experiments/Bounce.js",
+    "name": "BALL",
+    "description": "Its getting late, some are leaving"
   }
 ]

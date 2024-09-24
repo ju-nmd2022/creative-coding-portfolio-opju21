@@ -53,6 +53,7 @@ class Agent {
   draw() {
     push(); // Save the current drawing state
     noStroke();
+
     fill(random(255), random(255), random(255));
     ellipse(this.lastPosition.x + 5, this.lastPosition.y, 10);
     ellipse(this.lastPosition.x + 10, this.lastPosition.y + 5, 10);

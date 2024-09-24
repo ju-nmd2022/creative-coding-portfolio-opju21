@@ -3,10 +3,11 @@ let synth;
 function setup() {
   createCanvas(innerWidth, innerHeight);
   background(0);
-  synth = new Tone.Synth().toDestination(); // Initialize the synthesizer
+  synth = new Tone.PolySynth().toDestination(); // Initialize the synthesizer
+  synth.maxPolyphony = 100;
   Tone.start(); // Start Tone.js audio context
   initializeBoard(); // Initialize the board for the first time
-  noLoop(); // Prevent the draw function from looping automatically
+
   frameRate(3); // Set the frame rate to 5 frames per second
 }
 
@@ -30,8 +31,6 @@ class Cell {
         this.color = color(random(255), random(255), random(255));
       }
       fill(this.color); // Use the assigned color to fill the cell
-
-      ellipse(this.x * size + size / 2, this.y * size - size, size);
       ellipse(this.x * size + size / 2, this.y * size, size); // Draw the cell as an ellipse in the grid
 
       // Check the color and trigger sound based on color components
@@ -41,13 +40,35 @@ class Cell {
     rect(this.x * size, this.y * size, size); // Draw the grid cell as a rectangle
   }
 
+  // Calculate how many live neighbors this cell has
+  countLiveNeighbors() {
+    let startX = Math.max(0, this.x - 1); // Ensure bounds are valid
+    let startY = Math.max(0, this.y - 1);
+    let endX = Math.min(board.length, this.x + 2); // Limit to board size
+    let endY = Math.min(board[0].length, this.y + 2);
+
+    let liveNeighbors = 0;
+    for (let i = startX; i < endX; i++) {
+      for (let j = startY; j < endY; j++) {
+        if (!(i === this.x && j === this.y)) {
+          // Don't count itself
+          liveNeighbors += board[i][j].state;
+        }
+      }
+    }
+    return liveNeighbors;
+  }
+
+  // Trigger sound based on the cell's color and the number of live neighbors
   behaveBasedOnColor(col) {
     let r = red(col); // Get the red component of the cell's color
     let g = green(col); // Get the green component
     let b = blue(col); // Get the blue component
 
-    // Map the color to a sound, trigger sound only once when the color is active
-    if (!this.hasMadeNoise) {
+    let liveNeighbors = this.countLiveNeighbors(); // Count the number of live neighbors
+
+    // Only play sound if the cell has 4 or fewer living neighbors
+    if (liveNeighbors <= 4 && !this.hasMadeNoise && this.state === 1) {
       let note;
       if (r > g && r > b) {
         note = "C4"; // Red-dominant color plays C4
@@ -65,8 +86,8 @@ class Cell {
 }
 
 let board = []; // 2D array to represent the grid of cells
-let size = 20; // Size of each cell in the grid
-let boardsize = 40;
+let size = 40; // Size of each cell in the grid
+let boardsize = 10;
 
 // Initialize the board with cells
 function initializeBoard() {
@@ -116,16 +137,27 @@ function calculateLiving() {
 }
 
 function draw() {
-  const centerX = (width - size) / 2; // Calculate the X position to center the elements horizontally
-  const xPosition = centerX + this.x; // Calculate X position for the current element
-  translate(xPosition, 0);
+  background(0); // Clear the background each frame
   noStroke(); // Disable stroke for shapes
+
+  // Calculate total grid size in pixels
+  let totalGridWidth = size * boardsize;
+  let totalGridHeight = size * boardsize;
+
+  // Calculate the offset to center the grid
+  let offsetX = (width - totalGridWidth) / 2;
+  let offsetY = (height - totalGridHeight) / 2;
+
+  // Translate the canvas so the grid is centered
+  translate(offsetX, offsetY);
+
   for (let i = 0; i < board.length; i++) {
     for (let j = 0; j < board[i].length; j++) {
       board[i][j].draw(size); // Draw each cell
       calculateNewState(i, j); // Calculate the new state for the next generation
     }
   }
+
   calculateLiving(); // Calculate the number of living cells
 
   // Update the state of the board to the new state
@@ -134,22 +166,4 @@ function draw() {
       board[i][j].state = board[i][j].newState;
     }
   }
-}
-
-// Add a mousePressed function to trigger Tone.js and reinitialize the board
-function mousePressed() {
-  if (Tone.context.state !== "running") {
-    Tone.context.resume(); // Ensure Tone.js is started when the mouse is pressed (needed in some browsers)
-  }
-  initializeBoard(); // Reinitialize the board on click
-  redraw(); // Force a redraw after the board is reinitialized
-}
-
-// Allow draw to run again when triggered manually
-function mousePressed() {
-  if (Tone.context.state !== "running") {
-    Tone.context.resume(); // Ensure Tone.js is started when the mouse is pressed (needed in some browsers)
-  }
-  initializeBoard(); // Reinitialize the board on click
-  loop(); // Restart the draw loop to run continuously
 }
