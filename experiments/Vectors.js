@@ -52,6 +52,7 @@ class Agent {
 
   draw() {
     push(); // Save the current drawing state
+    blendMode(HARD_LIGHT);
     noStroke();
 
     fill(random(255), random(255), random(255));

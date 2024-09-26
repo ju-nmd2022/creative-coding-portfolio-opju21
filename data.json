@@ -20,6 +20,11 @@
     "description": "Explains the what and the why. What is the main idea? What is the purpose? What is the inspiration?"
   },
   {
+    "file": "experiments/gravity copy.js",
+    "name": "Dancing pixels",
+    "description": "Explains the what and the why. What is the main idea? What is the purpose? What is the inspiration?"
+  },
+  {
     "file": "experiments/gravity.js",
     "name": "Colorful heart worms",
     "description": "Explains the what and the why. What is the main idea? What is the purpose? What is the inspiration?"
@@ -49,15 +54,11 @@
     "name": "The girls are out on the town, PARTY!",
     "description": "Its getting late, some are leaving"
   },
-  {
-    "file": "experiments/Tone.js",
-    "name": "The girls are out on the town, PARTY!",
-    "description": "Its getting late, some are leaving"
-  },
+
   {
     "file": "experiments/GameOfLifeLong.js",
-    "name": "The girls are out on the town, PARTY!",
-    "description": "Its getting late, some are leaving"
+    "name": "Dancing to the music",
+    "description": "They all sing a diffrent tune"
   },
   {
     "file": "experiments/Bounce.js",

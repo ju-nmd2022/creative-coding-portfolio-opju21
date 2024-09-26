@@ -1,4 +1,5 @@
 let synth;
+let isFirstGeneration = true; // Flag to track the first generation
 
 function setup() {
   createCanvas(innerWidth, innerHeight);
@@ -31,7 +32,6 @@ class Cell {
       }
       fill(this.color);
       ellipse(this.x * size + size / 2, this.y * size, size);
-      this.behaveBasedOnColor(this.color);
     }
     rect(this.x * size, this.y * size, size);
   }
@@ -51,6 +51,26 @@ class Cell {
       }
     }
     return liveNeighbors;
+  }
+
+  playSoundForStateChange(newState) {
+    if (isFirstGeneration) return; // Do not play any sound in the first generation
+
+    let note;
+    if (this.state === 0 && newState === 1) {
+      // Cell is born
+      note = "C5";
+    } else if (this.state === 1 && newState === 0) {
+      // Cell dies
+      note = "A2";
+    } else if (this.state === 1 && newState === 1) {
+      // Cell remains alive
+      note = "E4";
+    }
+
+    if (note) {
+      synth.triggerAttackRelease(note, "8n");
+    }
   }
 
   behaveBasedOnColor(col) {
@@ -105,13 +125,19 @@ function calculateNewState(x, y) {
   let liveCells = values.filter((cell) => cell.state === 1);
   let currentState = board[x][y].state;
 
+  let newState;
   if (liveCells.length === 3) {
-    board[x][y].newState = 1;
+    newState = 1;
   } else if (liveCells.length === 4) {
-    board[x][y].newState = currentState;
+    newState = currentState;
   } else {
-    board[x][y].newState = 0;
+    newState = 0;
   }
+
+  // Play sound based on state change, excluding the first generation
+  board[x][y].playSoundForStateChange(newState);
+
+  board[x][y].newState = newState;
 }
 
 function calculateLiving() {
@@ -146,4 +172,6 @@ function draw() {
       board[i][j].state = board[i][j].newState;
     }
   }
+
+  isFirstGeneration = false; // Mark the end of the first generation
 }

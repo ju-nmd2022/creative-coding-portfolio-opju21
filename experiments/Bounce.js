@@ -10,6 +10,7 @@ let synth;
 let note;
 let grid = []; // Array to store the grid and each square's properties
 let mousedCLK = false;
+let xOffset, yOffset; // Offsets to center the grid
 
 function setup() {
   createCanvas(innerWidth, innerHeight);
@@ -19,6 +20,10 @@ function setup() {
   cols = Math.floor(width / (size + gap)); // Number of columns in the grid
   rows = Math.floor(height / (size + gap)); // Number of rows in the grid
 
+  // Calculate offsets to center the grid
+  xOffset = (width - (cols * (size + gap) - gap)) / 2;
+  yOffset = (height - (rows * (size + gap) - gap)) / 2;
+
   synth = new Tone.PolySynth().toDestination(); // Initialize the synthesizer
   synth.maxPolyphony = 100;
   Tone.start(); // Start Tone.js audio context
@@ -27,7 +32,10 @@ function setup() {
   for (let col = 0; col < cols; col++) {
     grid[col] = [];
     for (let row = 0; row < rows; row++) {
-      grid[col][row] = { hasMadeNoise: false }; // Each square starts with no sound made
+      grid[col][row] = {
+        hasMadeNoise: false, // Each square starts with no sound made
+        color: color(random(255), random(255), random(255)), // Assign a random color
+      };
     }
   }
 }
@@ -38,14 +46,17 @@ function draw() {
   // Draw grid
   for (let col = 0; col < cols; col++) {
     for (let row = 0; row < rows; row++) {
-      const xPosition = col * (size + gap);
-      const yPosition = row * (size + gap);
-      fill(255);
+      const xPosition = col * (size + gap) + xOffset;
+      const yPosition = row * (size + gap) + yOffset;
+
+      // Use the pre-assigned color to fill the square
+      fill(grid[col][row].color);
+
       rect(xPosition, yPosition, size, size); // Draw each cell in the grid
 
       // Check for ball collision with the current square
       if (isBallCollidingWithSquare(xPosition, yPosition, size)) {
-        fill(random(255), random(255), random(255)); // Change the color of the square if a collision occurs
+        fill(255); // Change to a new random color if a collision occurs
         rect(xPosition, yPosition, size, size);
 
         if (!grid[col][row].hasMadeNoise) {
