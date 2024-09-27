@@ -64,5 +64,10 @@
     "file": "experiments/Bounce.js",
     "name": "BALL",
     "description": "Its getting late, some are leaving"
+  },
+  {
+    "file": "experiments/SingingExperiment.js",
+    "name": "Dancing to the music, experimental",
+    "description": "They all sing a diffrent tune"
   }
 ]

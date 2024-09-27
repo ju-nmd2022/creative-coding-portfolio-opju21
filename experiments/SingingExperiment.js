@@ -4,10 +4,9 @@ function setup() {
   createCanvas(innerWidth, innerHeight);
   background(0);
   synth = new Tone.PolySynth().toDestination();
-  synth.maxPolyphony = 100;
+  synth.maxPolyphony = 50;
   Tone.start();
   initializeBoard();
-
   frameRate(3);
 }
 
@@ -18,20 +17,17 @@ class Cell {
     this.state = state;
     this.newState = -1;
     this.color = null;
-    this.hasMadeNoise = false;
   }
 
   draw(size) {
     if (this.state == 0) {
       fill(0, 0, 0);
-      this.hasMadeNoise = false;
     } else {
       if (this.color === null) {
         this.color = color(random(255), random(255), random(255));
       }
       fill(this.color);
       ellipse(this.x * size + size / 2, this.y * size, size);
-      this.behaveBasedOnColor(this.color);
     }
     rect(this.x * size, this.y * size, size);
   }
@@ -51,26 +47,6 @@ class Cell {
       }
     }
     return liveNeighbors;
-  }
-
-  behaveBasedOnColor(col) {
-    let r = red(col);
-    let g = green(col);
-    let b = blue(col);
-    let liveNeighbors = this.countLiveNeighbors();
-
-    if (liveNeighbors <= 4 && !this.hasMadeNoise && this.state === 1) {
-      let note;
-      if (r > g && r > b) {
-        //note = "C4";
-      } else if (g > r && g > b) {
-        //note = "E4";
-      } else if (b > r && b > g) {
-        // note = "G4";
-      }
-      synth.triggerAttackRelease(note, "8n");
-      this.hasMadeNoise = true;
-    }
   }
 }
 
@@ -117,8 +93,20 @@ function calculateNewState(x, y) {
 function calculateLiving() {
   let flat = board.flat();
   let mapped = flat.map((cell) => cell.state);
-  let living = mapped.reduce((acc, cur) => acc + cur, 0);
-  console.log(living);
+  let livingCells = mapped.reduce((acc, cur) => acc + cur, 0);
+
+  let livePositions = [];
+  if (livingCells === 4) {
+    for (let i = 0; i < board.length; i++) {
+      for (let j = 0; j < board[i].length; j++) {
+        if (board[i][j].state === 1) {
+          livePositions.push({ x: i, y: j });
+        }
+      }
+    }
+  }
+
+  return livingCells === 4 ? livePositions : [];
 }
 
 function draw() {
@@ -134,12 +122,52 @@ function draw() {
 
   for (let i = 0; i < board.length; i++) {
     for (let j = 0; j < board[i].length; j++) {
-      board[i][j].draw(size);
+      let cell = board[i][j];
+      let wasDead = cell.state === 0;
+
       calculateNewState(i, j);
+
+      // Trigger sound if the cell goes from dead to alive
+      if (
+        wasDead &&
+        cell.newState === 1 &&
+        synth.activeVoices < synth.maxPolyphony
+      ) {
+        let note;
+        if (cell.color === null) {
+          cell.color = color(random(255), random(255), random(255));
+        }
+        let r = red(cell.color);
+        let g = green(cell.color);
+        let b = blue(cell.color);
+
+        if (r > g && r > b) {
+          note = "C4";
+        } else if (g > r && g > b) {
+          note = "E4";
+        } else if (b > r && b > g) {
+          note = "G4";
+        }
+        synth.triggerAttackRelease(note, "8n");
+      }
+
+      cell.draw(size);
     }
   }
 
-  calculateLiving();
+  let livePositions = calculateLiving();
+
+  // Harmonize if exactly 4 cells are alive
+  if (livePositions.length === 4 && synth.activeVoices < synth.maxPolyphony) {
+    let notes = ["C4", "E4", "G4", "B4"];
+    for (
+      let i = 0;
+      i < livePositions.length && synth.activeVoices < synth.maxPolyphony;
+      i++
+    ) {
+      synth.triggerAttackRelease(notes[i], "8n");
+    }
+  }
 
   for (let i = 0; i < board.length; i++) {
     for (let j = 0; j < board[i].length; j++) {
