@@ -4,8 +4,7 @@ function setup() {
   createCanvas(innerWidth, innerHeight);
   background(0);
   synth = new Tone.PolySynth().toDestination();
-  synth.maxPolyphony = 50;
-  Tone.start();
+  synth.maxPolyphony = 10;
   initializeBoard();
   frameRate(3);
 }
@@ -62,6 +61,26 @@ function initializeBoard() {
       let state = Math.round(Math.random());
       let cell = new Cell(i, j, state);
       board[i].push(cell);
+
+      // Trigger sound for cells that start alive in the first generation
+      if (state === 1) {
+        if (cell.color === null) {
+          cell.color = color(random(255), random(255), random(255));
+        }
+        let note;
+        let r = red(cell.color);
+        let g = green(cell.color);
+        let b = blue(cell.color);
+
+        if (r > g && r > b) {
+          note = "C4";
+        } else if (g > r && g > b) {
+          note = "E4";
+        } else if (b > r && b > g) {
+          note = "G4";
+        }
+        synth.triggerAttackRelease(note, "8n");
+      }
     }
   }
 }
@@ -127,16 +146,15 @@ function draw() {
 
       calculateNewState(i, j);
 
-      // Trigger sound if the cell goes from dead to alive
       if (
         wasDead &&
         cell.newState === 1 &&
         synth.activeVoices < synth.maxPolyphony
       ) {
-        let note;
         if (cell.color === null) {
           cell.color = color(random(255), random(255), random(255));
         }
+        let note;
         let r = red(cell.color);
         let g = green(cell.color);
         let b = blue(cell.color);
@@ -152,20 +170,6 @@ function draw() {
       }
 
       cell.draw(size);
-    }
-  }
-
-  let livePositions = calculateLiving();
-
-  // Harmonize if exactly 4 cells are alive
-  if (livePositions.length === 4 && synth.activeVoices < synth.maxPolyphony) {
-    let notes = ["C4", "E4", "G4", "B4"];
-    for (
-      let i = 0;
-      i < livePositions.length && synth.activeVoices < synth.maxPolyphony;
-      i++
-    ) {
-      synth.triggerAttackRelease(notes[i], "8n");
     }
   }
 

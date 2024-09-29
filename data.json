@@ -56,11 +56,6 @@
   },
 
   {
-    "file": "experiments/GameOfLifeLong.js",
-    "name": "Dancing to the music",
-    "description": "They all sing a diffrent tune"
-  },
-  {
     "file": "experiments/Bounce.js",
     "name": "BALL",
     "description": "Its getting late, some are leaving"
